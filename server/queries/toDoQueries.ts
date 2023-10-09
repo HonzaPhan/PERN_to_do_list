@@ -1,0 +1,1 @@
+export const getAllToDoItems = 'SELECT * FROM todos WHERE user_email = $1'
