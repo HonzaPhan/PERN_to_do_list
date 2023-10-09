@@ -1,6 +1,10 @@
+import { CheckCircleOutline } from "@mui/icons-material"
+
 const TickIcon = () => {
   return (
-    <div></div>
+    <>
+      <CheckCircleOutline />
+    </>
   )
 }
 

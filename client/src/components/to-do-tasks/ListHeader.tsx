@@ -1,3 +1,4 @@
+import { Button } from "@mui/material"
 import { IListHeaderProps } from "../../helpers/Types"
 import "./ListHeaderStyles.css"
 
@@ -11,8 +12,8 @@ const ListHeader = ({ listName }: IListHeaderProps) => {
     <div className="list-header">
       <h1>{listName}</h1>
       <div className="button-container">
-        <button className="create">Add New</button>
-        <button className="signout" onClick={singOut}>Sign Out</button>
+        <Button variant="contained" color="success">Add New</Button>
+        <Button variant="contained" color="error" onClick={singOut}>Sign Out</Button>
       </div>
     </div>
   )

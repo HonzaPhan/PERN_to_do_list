@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import { IListItemProps } from "../../helpers/Types";
 import TickIcon from "../icon/TickIcon";
 import ProgressBar from "../progress-bar/ProgressBar";
@@ -13,8 +14,8 @@ const ListItem = ({ task }: IListItemProps) => {
       </div>
 
       <div className="button-container">
-        <button className="edit">Edit</button>
-        <button className="delete">Delete</button>
+        <Button variant="contained" color="secondary">EDIT</Button>
+        <Button variant="contained" color="error">DELETE</Button>
       </div>
       
     </div>
