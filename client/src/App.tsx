@@ -2,23 +2,19 @@ import { useEffect, useState } from "react";
 import ListHeader from "./components/to-do-tasks/ListHeader";
 import ListItem from "./components/to-do-tasks/ListItem";
 import { GetToDoAPI } from "./components/api/ToDoAPI";
-
-interface Task {
-  id: number;
-  title: string;
-  progress: number;
-  createdAt: string;
-}
+import { Task } from "./helpers/Types";
+import { Box } from "@mui/material";
 
 const App = () => {
   const [task, setTask] = useState<Task[]>();
+  const [showModal, setShowModal] = useState(false);
+  
+  const fetchData = async () => {
+    const data = await GetToDoAPI();
+    setTask(data);
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await GetToDoAPI();
-      setTask(data);
-    };
-
     fetchData();
   }, []);
 
@@ -27,12 +23,12 @@ const App = () => {
   });
 
   return (
-    <div className="app">
-      <ListHeader listName={"To Do List"} />
+    <Box className="app">
+      <ListHeader listName={"To Do List"} fetchData={fetchData} />
       {sortedTasks?.map((task) => (
-        <ListItem key={task.id} task={task.title} />
+        <ListItem key={task.id} task={task} fetchData={fetchData} setShowModal={setShowModal}/>
       ))}
-    </div>
+    </Box>
   );
 };
 
