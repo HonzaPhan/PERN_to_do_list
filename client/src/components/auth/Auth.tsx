@@ -3,8 +3,10 @@ import { useState } from "react";
 import { CustomizedBox } from "../MUI-customized-components/Box";
 import axios from "axios";
 import { API_URL } from "../api/ToDoAPI";
+import { useCookies } from "react-cookie";
 
 const Auth = () => {
+  const [cookies, setCookie, removeCookie] = useCookies(null)
   const [isLogIn, setIsLogIn] = useState(false);
   const [email, setEmail] = useState<null | string>(null);
   const [password, setPassword] = useState<null | string>(null);
@@ -46,6 +48,8 @@ const Auth = () => {
         } else {
           setCookie('Email', data.email)
           setCookie('Authtoken', data.token)
+
+          window.location.reload()
         }
       })
       .catch((err) => setError(err.message));

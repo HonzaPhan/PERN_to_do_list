@@ -5,12 +5,14 @@ import { GetToDoAPI } from "./components/api/ToDoAPI";
 import { Task } from "./helpers/Types";
 import { Box } from "@mui/material";
 import Auth from "./components/auth/Auth";
+import { useCookies } from "react-cookie";
 
 const App = () => {
+  const [cookies, setCookie, removeCookie] = useCookies(null)
+  const authToken = cookies.Authtoken
+  const email = cookies.Email
   const [task, setTask] = useState<Task[]>();
   const [showModal, setShowModal] = useState(false);
-
-  const authToken = false;
 
   const fetchData = async () => {
     const data = await GetToDoAPI();

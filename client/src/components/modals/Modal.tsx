@@ -11,12 +11,14 @@ import { ChangeEvent, useState } from "react";
 import { IHandleSliderChange, IModalProps } from "../../helpers/Types";
 import axios from "axios";
 import { API_URL } from "../api/ToDoAPI";
+import { useCookies } from "react-cookie";
 
 const ModalTask = ({ mode, setShowModal, fetchData, task }: IModalProps) => {
+  const [cookies, setCookie, removeCookie] = useCookies(null)
   const editMode = mode === "edit" ? true : false;
 
   const [data, setData] = useState({
-    user_email: editMode ? task!.user_email: "honzaphan98@gmail.com",
+    user_email: editMode ? task!.user_email: cookies.Email,
     title: editMode ? task!.title : null,
     progress: editMode ? task!.progress : 50,
     date: editMode ? task!.createdAt : new Date(),
