@@ -6,3 +6,5 @@ export const createNewToDoItem =
 export const updateToDoItem = "UPDATE todoslist SET user_email = $1, title = $2, progress = $3 WHERE id = $4 RETURNING *";
 
 export const deleteToDoItem = "DELETE FROM todoslist WHERE id = $1 RETURNING *";
+
+export const createNewUser = "INSERT INTO users (email, hashedPassword) VALUES ($1, $2) RETURNING *";

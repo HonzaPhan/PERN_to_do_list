@@ -2,11 +2,14 @@ import express from "express";
 import { pool } from "./db";
 import {
   createNewToDoItem,
+  createNewUser,
   deleteToDoItem,
   getAllToDoItems,
   updateToDoItem,
 } from "./queries/toDoQueries";
 import cors from "cors";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const PORT = process.env.PORT ?? 8000;
 const app = express();
@@ -70,6 +73,38 @@ app.delete("/todos/:id", async (req, res) => {
     console.log(error);
   }
 });
+
+// SIGN UP
+app.post("/signup", async (req, res) => {
+  const { email, password } = req.body;
+  const salt = bcrypt.genSalt(10)
+  const hashedPassword = bcrypt.hashSync(password, await salt)
+  
+  try {
+    await pool.query(createNewUser, [email, hashedPassword]);
+    res.json(createNewUser)
+
+    const token = jwt.sign({ email }, 'secret', { expiresIn: '1h' })
+
+    res.json({ email, token})
+  } catch (error) {
+    console.log(error);
+    if(error) {
+      res.json({ detail: error.detail })
+    }
+  }
+})
+
+// LOGIN
+app.post("/signup", async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    
+  } catch (error) {
+    console.log(error);
+  }
+})
 
 app.listen(PORT, () => {
   console.log(`Server running on: ${PORT}`);
