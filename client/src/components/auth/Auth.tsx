@@ -6,8 +6,9 @@ import { API_URL } from "../api/ToDoAPI";
 import { useCookies } from "react-cookie";
 
 const Auth = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(null)
-  const [isLogIn, setIsLogIn] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [cookies, setCookie, removeCookie] = useCookies<string>(["user"]);
+  const [isLogIn, setIsLogIn] = useState(true);
   const [email, setEmail] = useState<null | string>(null);
   const [password, setPassword] = useState<null | string>(null);
   const [confirmPassword, setConfirmPassword] = useState<null | string>(null);
@@ -20,7 +21,7 @@ const Auth = () => {
 
   const handleSubmit = async (
     e: { preventDefault: () => void },
-    endpoint: any
+    endpoint: string
   ) => {
     e.preventDefault();
 
@@ -29,30 +30,29 @@ const Auth = () => {
       return;
     }
 
-    await axios({
-      method: "POST",
-      url: `${API_URL}/${endpoint}/`,
-      data: JSON.stringify({
-        email,
-        password,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        const data = response.data
-        
-        if(data.detail) {
-          setError(data.detail)
-        } else {
-          setCookie('Email', data.email)
-          setCookie('Authtoken', data.token)
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${API_URL}/${endpoint}/`,
+        data: {
+          email,
+          password,
+        },
+      });
 
-          window.location.reload()
-        }
-      })
-      .catch((err) => setError(err.message));
+      const data = response.data;      
+
+      if (data.detail) {
+        setError(data.detail);
+      } else {
+        setCookie("Email", data.email);
+        setCookie("Authtoken", data.token);
+
+        window.location.reload();
+      }
+    } catch (error) {
+      setError("Something went wrong!");
+    }
   };
 
   return (
@@ -69,14 +69,29 @@ const Auth = () => {
             >
               {isLogIn ? "Please log in!" : "Please sign up!"}
             </Typography>
-            <Input placeholder="E-mail" type="email" required onChange={(e) => setEmail(e.target.value)}/>
+            <Input
+              placeholder="E-mail"
+              type="email"
+              required
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </FormControl>
           <FormControl>
-            <Input placeholder="Password" type="password" required onChange={(e) => setPassword(e.target.value)}/>
+            <Input
+              placeholder="Password"
+              type="password"
+              required
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </FormControl>
           {!isLogIn && (
             <FormControl>
-              <Input placeholder="Confirm password" type="password" required onChange={(e) => setConfirmPassword(e.target.value)}/>
+              <Input
+                placeholder="Confirm password"
+                type="password"
+                required
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
             </FormControl>
           )}
           <Button

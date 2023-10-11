@@ -14,7 +14,8 @@ import { API_URL } from "../api/ToDoAPI";
 import { useCookies } from "react-cookie";
 
 const ModalTask = ({ mode, setShowModal, fetchData, task }: IModalProps) => {
-  const [cookies, setCookie, removeCookie] = useCookies(null)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [cookies, setCookie, removeCookie] = useCookies(['Email', 'Authtoken'])
   const editMode = mode === "edit" ? true : false;
 
   const [data, setData] = useState({

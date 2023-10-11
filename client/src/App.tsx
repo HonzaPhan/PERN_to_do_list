@@ -1,22 +1,33 @@
 import { useEffect, useState } from "react";
 import ListHeader from "./components/to-do-tasks/ListHeader";
 import ListItem from "./components/to-do-tasks/ListItem";
-import { GetToDoAPI } from "./components/api/ToDoAPI";
+import { API_URL } from "./components/api/ToDoAPI";
 import { Task } from "./helpers/Types";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Auth from "./components/auth/Auth";
 import { useCookies } from "react-cookie";
+import axios from "axios";
 
 const App = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(null)
-  const authToken = cookies.Authtoken
-  const email = cookies.Email
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [cookies, setCookie, removeCookie] = useCookies<string>(["user"]);
   const [task, setTask] = useState<Task[]>();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [showModal, setShowModal] = useState(false);
 
+  const authToken = cookies.Authtoken
+  const email = cookies.Email
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const fetchData = async () => {
-    const data = await GetToDoAPI();
-    setTask(data);
+    try {
+      const response = await axios.get(`${API_URL}/todos/${email}`);
+      if (response.status === 200) {
+        setTask(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -24,6 +35,7 @@ const App = () => {
       fetchData();
     }
   }, []);
+
 
   const sortedTasks = task?.sort((a, b): number => {
     return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
@@ -41,6 +53,7 @@ const App = () => {
       {authToken && (
         <>
           <ListHeader listName={"To Do List"} fetchData={fetchData} />
+          <Typography variant="h3" component="p">Welcome back {email}</Typography>
           {sortedTasks?.map((task) => (
             <ListItem
               key={task.id}

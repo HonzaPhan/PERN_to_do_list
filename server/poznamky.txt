@@ -1,0 +1,2 @@
+udělat úkol a rozdělit logiku do controllerů, routes, middleware
+udělat react, server a stáhnout npm mongoose

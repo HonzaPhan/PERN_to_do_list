@@ -5,6 +5,7 @@ import {
   createNewUser,
   deleteToDoItem,
   getAllToDoItems,
+  getUser,
   updateToDoItem,
 } from "./queries/toDoQueries";
 import cors from "cors";
@@ -75,7 +76,7 @@ app.delete("/todos/:id", async (req, res) => {
 });
 
 // SIGN UP
-app.post("/signup", async (req, res) => {
+app.post("/signup/", async (req, res) => {
   const { email, password } = req.body;
   const salt = bcrypt.genSalt(10)
   const hashedPassword = bcrypt.hashSync(password, await salt)
@@ -90,19 +91,34 @@ app.post("/signup", async (req, res) => {
   } catch (error) {
     console.log(error);
     if(error) {
-      res.json({ detail: error.detail })
+      res.json({ detail: 'User already exists' })
     }
   }
 })
 
 // LOGIN
-app.post("/signup", async (req, res) => {
+app.post("/login/", async (req, res) => {
   const { email, password } = req.body;
-
+  
   try {
+    const users = await pool.query(getUser, [email]);
     
+    if(!users.rows.length) {
+      res.json({ detail: 'User not found' })
+      return;
+    }
+
+    const success = await bcrypt.compare(password, users.rows[0].hashedPassword)
+    const token = jwt.sign({ email }, 'secret', { expiresIn: '1h' })
+
+    if(success) {
+      res.json({ 'email': users.rows[0].email, token})
+    } else {
+      res.json({ detail: 'Login Failed' })
+    }
+
   } catch (error) {
-    console.log(error);
+    res.status(500).json({ detail: "An error occurred during login" });
   }
 })
 

@@ -3,12 +3,19 @@ import { IListHeaderProps } from "../../helpers/Types";
 import ModalTask from "../modals/Modal";
 import { useState } from "react";
 import { CustomizedBox } from "../MUI-customized-components/Box";
+import { useCookies } from "react-cookie";
 
 const ListHeader = ({ listName, fetchData }: IListHeaderProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [cookies, setCookie, removeCookie] = useCookies(['Email', 'Authtoken']);
+
   const [showModal, setShowModal] = useState(false);
 
   const singOut = () => {
     console.log("Sign out");
+    removeCookie('Email')
+    removeCookie('Authtoken')
+    window.location.reload()
   };
 
   return (
