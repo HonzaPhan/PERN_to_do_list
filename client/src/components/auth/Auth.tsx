@@ -31,16 +31,12 @@ const Auth = () => {
     }
 
     try {
-      const response = await axios({
-        method: "POST",
-        url: `${API_URL}/${endpoint}/`,
-        data: {
-          email,
-          password,
-        },
+      const response = await axios.post(`${API_URL}/${endpoint}/${email}`, {
+        email,
+        password,
       });
 
-      const data = response.data;      
+      const data = response.data;
 
       if (data.detail) {
         setError(data.detail);
